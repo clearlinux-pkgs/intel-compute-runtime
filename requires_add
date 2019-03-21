@@ -1,2 +1,6 @@
 # This file contains additional runtime requirements that did not get
 # picked up automatically. One name per line, no whitespace.
+intel-graphics-compiler
+libva
+libdrm
+ocl-icd
