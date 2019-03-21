@@ -2,6 +2,7 @@
 # picked up automatically. One name per line, no whitespace.
 intel-graphics-compiler-dev
 intel-graphics-compiler
+opencl-clang-dev
 libdrm-dev
 libva-dev
 nano
