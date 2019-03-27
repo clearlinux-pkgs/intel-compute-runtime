@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.09.12487
-Release  : 4
+Release  : 5
 URL      : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Summary  : No detailed summary available
@@ -83,7 +83,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553194775
+export SOURCE_DATE_EPOCH=1553647076
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -93,7 +93,7 @@ make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1553194775
+export SOURCE_DATE_EPOCH=1553647076
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
