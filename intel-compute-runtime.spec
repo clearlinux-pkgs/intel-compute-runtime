@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.09.12487
-Release  : 5
+Release  : 6
 URL      : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Summary  : No detailed summary available
@@ -62,6 +62,7 @@ Group: Development
 Requires: intel-compute-runtime-bin = %{version}-%{release}
 Requires: intel-compute-runtime-data = %{version}-%{release}
 Provides: intel-compute-runtime-devel = %{version}-%{release}
+Requires: intel-compute-runtime = %{version}-%{release}
 
 %description dev
 dev components for the intel-compute-runtime package.
@@ -83,17 +84,16 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553647076
+export SOURCE_DATE_EPOCH=1553786930
 mkdir -p clr-build
 pushd clr-build
-export LDFLAGS="${LDFLAGS} -fno-lto"
 %cmake .. -DBUILD_TYPE=Release \
 -DSKIP_UNIT_TESTS=1
-make  %{?_smp_mflags} VERBOSE=1
+make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1553647076
+export SOURCE_DATE_EPOCH=1553786930
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
@@ -101,6 +101,10 @@ cp third_party/opencl_headers/LICENSE %{buildroot}/usr/share/package-licenses/in
 pushd clr-build
 %make_install
 popd
+## install_append content
+mkdir -p %{buildroot}/usr/share/OpenCL/vendors
+mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr/share/OpenCL/vendors
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -111,8 +115,8 @@ popd
 
 %files data
 %defattr(-,root,root,-)
-/usr/share/defaults/etc/OpenCL/vendors/intel.icd
-/usr/share/defaults/etc/ld.so.conf.d/libintelopencl.conf
+%exclude /usr/share/defaults/etc/ld.so.conf.d/libintelopencl.conf
+/usr/share/OpenCL/vendors/intel.icd
 
 %files dev
 %defattr(-,root,root,-)

@@ -1,0 +1,2 @@
+mkdir -p %{buildroot}/usr/share/OpenCL/vendors
+mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr/share/OpenCL/vendors
