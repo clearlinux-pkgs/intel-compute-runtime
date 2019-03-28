@@ -1,2 +1,7 @@
 mkdir -p %{buildroot}/usr/share/OpenCL/vendors
 mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr/share/OpenCL/vendors
+
+
+# my kingdom for correct cmake files
+
+sed -i -e "s|/usr//usr|//usr/|g" %{buildroot}/usr/share/OpenCL/vendors/*
