@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.09.12487
-Release  : 7
+Release  : 8
 URL      : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.09.12487.tar.gz
 Summary  : No detailed summary available
@@ -30,6 +30,7 @@ BuildRequires : pkgconfig(igc-opencl)
 BuildRequires : pkgconfig(igdgmm)
 BuildRequires : pkgconfig(libva)
 BuildRequires : strace
+Patch1: 0001-fix-install-paths.patch
 
 %description
 # Intel(R) Graphics Compute Runtime for OpenCL(TM)
@@ -62,7 +63,6 @@ Group: Development
 Requires: intel-compute-runtime-bin = %{version}-%{release}
 Requires: intel-compute-runtime-data = %{version}-%{release}
 Provides: intel-compute-runtime-devel = %{version}-%{release}
-Requires: intel-compute-runtime = %{version}-%{release}
 
 %description dev
 dev components for the intel-compute-runtime package.
@@ -78,22 +78,24 @@ license components for the intel-compute-runtime package.
 
 %prep
 %setup -q -n compute-runtime-19.09.12487
+%patch1 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553788224
+export SOURCE_DATE_EPOCH=1553788868
 mkdir -p clr-build
 pushd clr-build
+export LDFLAGS="${LDFLAGS} -fno-lto"
 %cmake .. -DBUILD_TYPE=Release \
 -DSKIP_UNIT_TESTS=1
-make  %{?_smp_mflags}
+make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1553788224
+export SOURCE_DATE_EPOCH=1553788868
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
