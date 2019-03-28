@@ -1,4 +1,4 @@
-From a33de4a4d60af435b68ea753512f0430655b9725 Mon Sep 17 00:00:00 2001
+From fcf774673b6950188f4ed70f1c6d76ecd9ffdbae Mon Sep 17 00:00:00 2001
 From: Kevron Rees <tripzero.kev@gmail.com>
 Date: Thu, 28 Mar 2019 08:41:13 -0700
 Subject: [PATCH] fix install paths
@@ -8,7 +8,7 @@ Subject: [PATCH] fix install paths
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/package.cmake b/package.cmake
-index 24960d52..7d9d3d06 100644
+index 24960d52..3bb71af9 100644
 --- a/package.cmake
 +++ b/package.cmake
 @@ -39,8 +39,8 @@ if(UNIX)
@@ -17,8 +17,8 @@ index 24960d52..7d9d3d06 100644
    install(
 -    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/libintelopencl.conf \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\n\" )"
 -    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/intel.icd \"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${OCL_ICD_RUNTIME_NAME}\n\" )"
-+    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/libintelopencl.conf \"${CMAKE_INSTALL_LIBDIR}\n\" )"
-+    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/intel.icd \"${CMAKE_INSTALL_LIBDIR}/${OCL_ICD_RUNTIME_NAME}\n\" )"
++    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/libintelopencl.conf \"${CMAKE_INSTALL_FULL_LIBDIR}\n\" )"
++    CODE "file( WRITE ${IGDRCL_BINARY_DIR}/intel.icd \"${CMAKE_INSTALL_FULL_LIBDIR}/${OCL_ICD_RUNTIME_NAME}\n\" )"
      CODE "file( WRITE ${IGDRCL_BINARY_DIR}/tmp/postinst \"/sbin/ldconfig\n\" )"
      CODE "file( WRITE ${IGDRCL_BINARY_DIR}/tmp/postrm \"/sbin/ldconfig\n\" )"
      CODE "file( COPY ${IGDRCL_BINARY_DIR}/tmp/postinst DESTINATION ${IGDRCL_BINARY_DIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE )"
