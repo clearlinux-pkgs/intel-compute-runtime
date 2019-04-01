@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.11.12599
-Release  : 12
+Release  : 13
 URL      : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Summary  : No detailed summary available
@@ -12,6 +12,7 @@ Group    : Development/Tools
 License  : MIT
 Requires: intel-compute-runtime-bin = %{version}-%{release}
 Requires: intel-compute-runtime-data = %{version}-%{release}
+Requires: intel-compute-runtime-lib = %{version}-%{release}
 Requires: intel-compute-runtime-license = %{version}-%{release}
 Requires: intel-gmmlib-lib
 Requires: intel-graphics-compiler
@@ -59,15 +60,14 @@ Group: Data
 data components for the intel-compute-runtime package.
 
 
-%package dev
-Summary: dev components for the intel-compute-runtime package.
-Group: Development
-Requires: intel-compute-runtime-bin = %{version}-%{release}
+%package lib
+Summary: lib components for the intel-compute-runtime package.
+Group: Libraries
 Requires: intel-compute-runtime-data = %{version}-%{release}
-Provides: intel-compute-runtime-devel = %{version}-%{release}
+Requires: intel-compute-runtime-license = %{version}-%{release}
 
-%description dev
-dev components for the intel-compute-runtime package.
+%description lib
+lib components for the intel-compute-runtime package.
 
 
 %package license
@@ -87,7 +87,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1554133306
+export SOURCE_DATE_EPOCH=1554133553
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -97,7 +97,7 @@ make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1554133306
+export SOURCE_DATE_EPOCH=1554133553
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
@@ -123,7 +123,7 @@ sed -i -e "s|/usr//usr|//usr/|g" %{buildroot}/usr/share/OpenCL/vendors/*
 %exclude /usr/share/defaults/etc/ld.so.conf.d/libintelopencl.conf
 /usr/share/OpenCL/vendors/intel.icd
 
-%files dev
+%files lib
 %defattr(-,root,root,-)
 /usr/lib64/libigdrcl.so
 
