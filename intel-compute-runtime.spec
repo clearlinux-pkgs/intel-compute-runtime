@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.11.12599
-Release  : 11
+Release  : 12
 URL      : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Summary  : No detailed summary available
@@ -13,10 +13,12 @@ License  : MIT
 Requires: intel-compute-runtime-bin = %{version}-%{release}
 Requires: intel-compute-runtime-data = %{version}-%{release}
 Requires: intel-compute-runtime-license = %{version}-%{release}
+Requires: intel-gmmlib-lib
 Requires: intel-graphics-compiler
 Requires: libdrm
 Requires: libva
 Requires: ocl-icd
+Requires: opencl-clang-dev
 BuildRequires : buildreq-cmake
 BuildRequires : gdb
 BuildRequires : intel-graphics-compiler
@@ -85,7 +87,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1553839587
+export SOURCE_DATE_EPOCH=1554133306
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -95,7 +97,7 @@ make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1553839587
+export SOURCE_DATE_EPOCH=1554133306
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE

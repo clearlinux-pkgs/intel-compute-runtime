@@ -1,0 +1,15 @@
+diff --git a/requires_add b/requires_add
+index b1c71de..a727d12 100644
+--- a/requires_add
++++ b/requires_add
+@@ -1,6 +1,8 @@
+ # This file contains additional runtime requirements that did not get
+ # picked up automatically. One name per line, no whitespace.
+ intel-graphics-compiler
++intel-gmmlib-lib
++opencl-clang-dev
+ libva
+ libdrm
+-ocl-icd
+\ No newline at end of file
++ocl-icd
