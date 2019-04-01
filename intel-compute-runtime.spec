@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.11.12599
-Release  : 13
+Release  : 14
 URL      : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.11.12599.tar.gz
 Summary  : No detailed summary available
@@ -87,7 +87,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1554133553
+export SOURCE_DATE_EPOCH=1554142529
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -97,7 +97,7 @@ make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1554133553
+export SOURCE_DATE_EPOCH=1554142529
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
@@ -108,7 +108,6 @@ popd
 ## install_append content
 mkdir -p %{buildroot}/usr/share/OpenCL/vendors
 mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr/share/OpenCL/vendors
-sed -i -e "s|/usr//usr|//usr/|g" %{buildroot}/usr/share/OpenCL/vendors/*
 ## install_append end
 
 %files
