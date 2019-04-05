@@ -1,4 +1,0 @@
-libigdrcl.so:GTPin_Init
-libigdrcl.so:clGetExtensionFunctionAddress
-libigdrcl.so:clGetPlatformInfo
-libigdrcl.so:clIcdGetPlatformIDsKHR
