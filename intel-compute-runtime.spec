@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.13.12717
-Release  : 15
+Release  : 16
 URL      : https://github.com/intel/compute-runtime/archive/19.13.12717.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.13.12717.tar.gz
 Summary  : No detailed summary available
@@ -21,18 +21,15 @@ Requires: libva
 Requires: ocl-icd
 Requires: opencl-clang-dev
 BuildRequires : buildreq-cmake
-BuildRequires : gdb
 BuildRequires : intel-graphics-compiler
 BuildRequires : intel-graphics-compiler-dev
 BuildRequires : libdrm-dev
 BuildRequires : libva-dev
-BuildRequires : nano
 BuildRequires : opencl-clang-dev
 BuildRequires : pkg-config
 BuildRequires : pkgconfig(igc-opencl)
 BuildRequires : pkgconfig(igdgmm)
 BuildRequires : pkgconfig(libva)
-BuildRequires : strace
 
 %description
 # Intel(R) Graphics Compute Runtime for OpenCL(TM)
@@ -85,7 +82,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1554490574
+export SOURCE_DATE_EPOCH=1554770373
 mkdir -p clr-build
 pushd clr-build
 export LDFLAGS="${LDFLAGS} -fno-lto"
@@ -95,7 +92,7 @@ make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1554490574
+export SOURCE_DATE_EPOCH=1554770373
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE

@@ -5,6 +5,3 @@ intel-graphics-compiler
 opencl-clang-dev
 libdrm-dev
 libva-dev
-nano
-gdb
-strace
