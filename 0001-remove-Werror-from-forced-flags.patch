@@ -1,0 +1,25 @@
+From ac252dbbeb1d558f6f29c987ebe787ea5392ad3f Mon Sep 17 00:00:00 2001
+From: Daniel Charles <daniel.charles@intel.com>
+Date: Fri, 24 May 2019 18:49:48 -0700
+Subject: [PATCH] remove Werror from forced flags
+
+Signed-off-by: Daniel Charles <daniel.charles@intel.com>
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f77a2b89..88ae7575 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -624,7 +624,6 @@ if(NOT MSVC)
+       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-noexcept-type")  # Added for gtest
+     endif()
+   endif()
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+ endif()
+ 
+ # Compile code with defenses enabled (settings to be used for production release code)
+-- 
+2.20.1
+
