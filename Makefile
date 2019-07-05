@@ -1,5 +1,5 @@
 PKG_NAME := intel-compute-runtime
-URL = https://github.com/intel/compute-runtime/archive/19.25.13237/compute-runtime-19.25.13237.tar.gz
+URL = https://github.com/intel/compute-runtime/archive/19.26.13286/compute-runtime-19.26.13286.tar.gz
 ARCHIVES = 
 
 include ../common/Makefile.common
