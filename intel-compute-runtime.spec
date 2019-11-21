@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.45.14764
-Release  : 33
+Release  : 34
 URL      : https://github.com/intel/compute-runtime/archive/19.45.14764/compute-runtime-19.45.14764.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.45.14764/compute-runtime-19.45.14764.tar.gz
 Summary  : No detailed summary available
