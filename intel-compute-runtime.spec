@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.45.14764
-Release  : 34
+Release  : 35
 URL      : https://github.com/intel/compute-runtime/archive/19.45.14764/compute-runtime-19.45.14764.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.45.14764/compute-runtime-19.45.14764.tar.gz
 Summary  : No detailed summary available
@@ -88,7 +88,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573851526
+export SOURCE_DATE_EPOCH=1574786976
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -97,13 +97,12 @@ export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 %cmake .. -DBUILD_TYPE=Release \
--DSKIP_UNIT_TESTS=1 \
--DSUPPORT_GEN12LP=0
+-DSKIP_UNIT_TESTS=1
 make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1573851526
+export SOURCE_DATE_EPOCH=1574786976
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp %{_builddir}/compute-runtime-19.45.14764/LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/47021b8c525fc84a5270553d63104832f4f99648
