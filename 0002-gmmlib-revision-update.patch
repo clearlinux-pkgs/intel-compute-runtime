@@ -1,7 +1,7 @@
-From 8076f2ebb119d6065504923c1bce09b1f4bb8135 Mon Sep 17 00:00:00 2001
+From 738f5ad79e2be2ba1568bc4a2e68a4a53d1ebb9c Mon Sep 17 00:00:00 2001
 From: ocldev <ocldev@intel.com>
 Date: Fri, 20 Dec 2019 16:33:23 +0100
-Subject: [PATCH 2/2] gmmlib revision update
+Subject: [PATCH] gmmlib revision update
 
 use new interface from gmmlib 19.4.1
 
@@ -10,8 +10,8 @@ Signed-off-by: Jacek Danecki <jacek.danecki@intel.com>
 ---
  core/gmm_helper/gmm_helper.h                              | 6 +++---
  manifests/manifest.yml                                    | 2 +-
- runtime/dll/linux/options.cpp                             | 6 +++---
- runtime/dll/windows/options.cpp                           | 6 +++---
+ runtime/dll/linux/options_linux.cpp                       | 6 +++---
+ runtime/dll/windows/options_windows.cpp                   | 6 +++---
  runtime/gmm_helper/client_context/gmm_client_context.cpp  | 4 ++--
  runtime/gmm_helper/client_context/gmm_client_context.h    | 4 ++--
  .../gmm_helper/client_context/gmm_client_context_base.cpp | 4 ++--
@@ -51,7 +51,7 @@ index 4f7f4fba..3a03c436 100644
  };
  } // namespace NEO
 diff --git a/manifests/manifest.yml b/manifests/manifest.yml
-index 6a6f6919..f39f34c4 100644
+index 2b9a979f..70803652 100644
 --- a/manifests/manifest.yml
 +++ b/manifests/manifest.yml
 @@ -4,7 +4,7 @@ components:
@@ -63,10 +63,10 @@ index 6a6f6919..f39f34c4 100644
      repository: https://github.com/intel/gmmlib.git
    igc:
      clean_on_sync: true
-diff --git a/runtime/dll/linux/options.cpp b/runtime/dll/linux/options.cpp
+diff --git a/runtime/dll/linux/options_linux.cpp b/runtime/dll/linux/options_linux.cpp
 index 9675eb73..e03b5daa 100644
---- a/runtime/dll/linux/options.cpp
-+++ b/runtime/dll/linux/options.cpp
+--- a/runtime/dll/linux/options_linux.cpp
++++ b/runtime/dll/linux/options_linux.cpp
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (C) 2017-2019 Intel Corporation
@@ -85,10 +85,10 @@ index 9675eb73..e03b5daa 100644
  
  const char *sysFsPciPath = "/sys/bus/pci/devices/";
  const char *tbxLibName = "libtbxAccess.so";
-diff --git a/runtime/dll/windows/options.cpp b/runtime/dll/windows/options.cpp
+diff --git a/runtime/dll/windows/options_windows.cpp b/runtime/dll/windows/options_windows.cpp
 index 5f3ace92..6cba1a71 100644
---- a/runtime/dll/windows/options.cpp
-+++ b/runtime/dll/windows/options.cpp
+--- a/runtime/dll/windows/options_windows.cpp
++++ b/runtime/dll/windows/options_windows.cpp
 @@ -1,5 +1,5 @@
  /*
 - * Copyright (C) 2017-2019 Intel Corporation
@@ -215,10 +215,10 @@ index 1902d77c..bb501bcd 100644
  }
  } // namespace NEO
 diff --git a/unit_tests/main.cpp b/unit_tests/main.cpp
-index b1a5ed7d..d52e46d2 100644
+index 23b46074..2af6e0ae 100644
 --- a/unit_tests/main.cpp
 +++ b/unit_tests/main.cpp
-@@ -456,8 +456,8 @@ int main(int argc, char **argv) {
+@@ -461,8 +461,8 @@ int main(int argc, char **argv) {
  #endif
      if (!useMockGmm) {
          Os::gmmDllName = GMM_UMD_DLL;
