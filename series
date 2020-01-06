@@ -1,1 +1,3 @@
 0001-remove-Werror-from-forced-flags.patch
+0001-Pass-os-interface-to-gmm-helper-s-constructor.patch
+0002-gmmlib-revision-update.patch

@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 19.50.15079
-Release  : 36
+Release  : 37
 URL      : https://github.com/intel/compute-runtime/archive/19.50.15079/compute-runtime-19.50.15079.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/19.50.15079/compute-runtime-19.50.15079.tar.gz
 Summary  : No detailed summary available
@@ -34,6 +34,8 @@ BuildRequires : pkgconfig(igc-opencl)
 BuildRequires : pkgconfig(igdgmm)
 BuildRequires : pkgconfig(libva)
 Patch1: 0001-remove-Werror-from-forced-flags.patch
+Patch2: 0001-Pass-os-interface-to-gmm-helper-s-constructor.patch
+Patch3: 0002-gmmlib-revision-update.patch
 
 %description
 # Intel(R) Graphics Compute Runtime for OpenCL(TM)
@@ -82,13 +84,15 @@ license components for the intel-compute-runtime package.
 %setup -q -n compute-runtime-19.50.15079
 cd %{_builddir}/compute-runtime-19.50.15079
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1576885027
+export SOURCE_DATE_EPOCH=1578342689
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -102,7 +106,7 @@ make  %{?_smp_mflags}  VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1576885027
+export SOURCE_DATE_EPOCH=1578342689
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
 cp %{_builddir}/compute-runtime-19.50.15079/LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/47021b8c525fc84a5270553d63104832f4f99648

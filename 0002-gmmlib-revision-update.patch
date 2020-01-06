@@ -1,0 +1,272 @@
+From 8076f2ebb119d6065504923c1bce09b1f4bb8135 Mon Sep 17 00:00:00 2001
+From: ocldev <ocldev@intel.com>
+Date: Fri, 20 Dec 2019 16:33:23 +0100
+Subject: [PATCH 2/2] gmmlib revision update
+
+use new interface from gmmlib 19.4.1
+
+Change-Id: Ie07bd9e9533c01ef06c67a4059a278850e365f07
+Signed-off-by: Jacek Danecki <jacek.danecki@intel.com>
+---
+ core/gmm_helper/gmm_helper.h                              | 6 +++---
+ manifests/manifest.yml                                    | 2 +-
+ runtime/dll/linux/options.cpp                             | 6 +++---
+ runtime/dll/windows/options.cpp                           | 6 +++---
+ runtime/gmm_helper/client_context/gmm_client_context.cpp  | 4 ++--
+ runtime/gmm_helper/client_context/gmm_client_context.h    | 4 ++--
+ .../gmm_helper/client_context/gmm_client_context_base.cpp | 4 ++--
+ .../gmm_helper/client_context/gmm_client_context_base.h   | 8 ++++----
+ runtime/gmm_helper/gmm_interface.cpp                      | 4 ++--
+ unit_tests/main.cpp                                       | 4 ++--
+ unit_tests/mocks/mock_gmm_client_context.cpp              | 4 ++--
+ unit_tests/mocks/mock_gmm_client_context.h                | 4 ++--
+ 12 files changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/core/gmm_helper/gmm_helper.h b/core/gmm_helper/gmm_helper.h
+index 4f7f4fba..3a03c436 100644
+--- a/core/gmm_helper/gmm_helper.h
++++ b/core/gmm_helper/gmm_helper.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2017-2019 Intel Corporation
++ * Copyright (C) 2017-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -40,7 +40,7 @@ class GmmHelper {
+ 
+     GmmClientContext *getClientContext() const;
+ 
+-    static std::unique_ptr<GmmClientContext> (*createGmmContextWrapperFunc)(OSInterface *, HardwareInfo *, decltype(&InitializeGmm), decltype(&GmmDestroy));
++    static std::unique_ptr<GmmClientContext> (*createGmmContextWrapperFunc)(OSInterface *, HardwareInfo *, decltype(&InitializeGmm), decltype(&GmmAdapterDestroy));
+ 
+   protected:
+     void loadLib();
+@@ -49,6 +49,6 @@ class GmmHelper {
+     std::unique_ptr<OsLibrary> gmmLib;
+     std::unique_ptr<GmmClientContext> gmmClientContext;
+     decltype(&InitializeGmm) initGmmFunc;
+-    decltype(&GmmDestroy) destroyGmmFunc;
++    decltype(&GmmAdapterDestroy) destroyGmmFunc;
+ };
+ } // namespace NEO
+diff --git a/manifests/manifest.yml b/manifests/manifest.yml
+index 6a6f6919..f39f34c4 100644
+--- a/manifests/manifest.yml
++++ b/manifests/manifest.yml
+@@ -4,7 +4,7 @@ components:
+     dest_dir: gmmlib
+     type: git
+     branch: gmmlib
+-    revision: intel-gmmlib-19.3.4
++    revision: intel-gmmlib-19.4.1
+     repository: https://github.com/intel/gmmlib.git
+   igc:
+     clean_on_sync: true
+diff --git a/runtime/dll/linux/options.cpp b/runtime/dll/linux/options.cpp
+index 9675eb73..e03b5daa 100644
+--- a/runtime/dll/linux/options.cpp
++++ b/runtime/dll/linux/options.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2017-2019 Intel Corporation
++ * Copyright (C) 2017-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -16,8 +16,8 @@ const char *frontEndDllName = FCL_LIBRARY_NAME;
+ const char *igcDllName = IGC_LIBRARY_NAME;
+ const char *libvaDllName = "libva.so.2";
+ const char *gmmDllName = GMM_UMD_DLL;
+-const char *gmmInitFuncName = GMM_INIT_NAME;
+-const char *gmmDestroyFuncName = GMM_DESTROY_NAME;
++const char *gmmInitFuncName = GMM_ADAPTER_INIT_NAME;
++const char *gmmDestroyFuncName = GMM_ADAPTER_DESTROY_NAME;
+ 
+ const char *sysFsPciPath = "/sys/bus/pci/devices/";
+ const char *tbxLibName = "libtbxAccess.so";
+diff --git a/runtime/dll/windows/options.cpp b/runtime/dll/windows/options.cpp
+index 5f3ace92..6cba1a71 100644
+--- a/runtime/dll/windows/options.cpp
++++ b/runtime/dll/windows/options.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2017-2019 Intel Corporation
++ * Copyright (C) 2017-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -14,8 +14,8 @@ const char *frontEndDllName = FCL_LIBRARY_NAME;
+ const char *igcDllName = IGC_LIBRARY_NAME;
+ const char *gdiDllName = "gdi32.dll";
+ const char *gmmDllName = GMM_UMD_DLL;
+-const char *gmmInitFuncName = GMM_INIT_NAME;
+-const char *gmmDestroyFuncName = GMM_DESTROY_NAME;
++const char *gmmInitFuncName = GMM_ADAPTER_INIT_NAME;
++const char *gmmDestroyFuncName = GMM_ADAPTER_DESTROY_NAME;
+ 
+ // Os specific Metrics Library name
+ #if _WIN64
+diff --git a/runtime/gmm_helper/client_context/gmm_client_context.cpp b/runtime/gmm_helper/client_context/gmm_client_context.cpp
+index 226aa4e4..2bc0a3c7 100644
+--- a/runtime/gmm_helper/client_context/gmm_client_context.cpp
++++ b/runtime/gmm_helper/client_context/gmm_client_context.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -8,5 +8,5 @@
+ #include "gmm_client_context.h"
+ 
+ namespace NEO {
+-GmmClientContext::GmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc) : GmmClientContextBase(osInterface, hwInfo, initFunc, destroyFunc){};
++GmmClientContext::GmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc) : GmmClientContextBase(osInterface, hwInfo, initFunc, destroyFunc){};
+ } // namespace NEO
+diff --git a/runtime/gmm_helper/client_context/gmm_client_context.h b/runtime/gmm_helper/client_context/gmm_client_context.h
+index c0cc3a49..c485ecba 100644
+--- a/runtime/gmm_helper/client_context/gmm_client_context.h
++++ b/runtime/gmm_helper/client_context/gmm_client_context.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -11,6 +11,6 @@
+ namespace NEO {
+ class GmmClientContext : public GmmClientContextBase {
+   public:
+-    GmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc);
++    GmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc);
+ };
+ } // namespace NEO
+diff --git a/runtime/gmm_helper/client_context/gmm_client_context_base.cpp b/runtime/gmm_helper/client_context/gmm_client_context_base.cpp
+index 0f829969..7891bb77 100644
+--- a/runtime/gmm_helper/client_context/gmm_client_context_base.cpp
++++ b/runtime/gmm_helper/client_context/gmm_client_context_base.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -15,7 +15,7 @@
+ #include "runtime/os_interface/os_interface.h"
+ 
+ namespace NEO {
+-GmmClientContextBase::GmmClientContextBase(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc) : destroyFunc(destroyFunc) {
++GmmClientContextBase::GmmClientContextBase(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc) : destroyFunc(destroyFunc) {
+     _SKU_FEATURE_TABLE gmmFtrTable = {};
+     _WA_TABLE gmmWaTable = {};
+     SkuInfoTransfer::transferFtrTableForGmm(&gmmFtrTable, &hwInfo->featureTable);
+diff --git a/runtime/gmm_helper/client_context/gmm_client_context_base.h b/runtime/gmm_helper/client_context/gmm_client_context_base.h
+index b2b736c5..b2634dc1 100644
+--- a/runtime/gmm_helper/client_context/gmm_client_context_base.h
++++ b/runtime/gmm_helper/client_context/gmm_client_context_base.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -25,7 +25,7 @@ class GmmClientContextBase {
+     MOCKABLE_VIRTUAL void destroyResInfoObject(GMM_RESOURCE_INFO *pResInfo);
+     GMM_CLIENT_CONTEXT *getHandle() const;
+     template <typename T>
+-    static std::unique_ptr<GmmClientContext> create(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc) {
++    static std::unique_ptr<GmmClientContext> create(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc) {
+         return std::make_unique<T>(osInterface, hwInfo, initFunc, destroyFunc);
+     }
+ 
+@@ -34,7 +34,7 @@ class GmmClientContextBase {
+ 
+   protected:
+     GMM_CLIENT_CONTEXT *clientContext;
+-    GmmClientContextBase(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc);
+-    decltype(&GmmDestroy) destroyFunc;
++    GmmClientContextBase(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc);
++    decltype(&GmmAdapterDestroy) destroyFunc;
+ };
+ } // namespace NEO
+diff --git a/runtime/gmm_helper/gmm_interface.cpp b/runtime/gmm_helper/gmm_interface.cpp
+index 1902d77c..bb501bcd 100644
+--- a/runtime/gmm_helper/gmm_interface.cpp
++++ b/runtime/gmm_helper/gmm_interface.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -21,7 +21,7 @@ void GmmHelper::loadLib() {
+     gmmLib.reset(OsLibrary::load(Os::gmmDllName));
+     UNRECOVERABLE_IF(!gmmLib);
+     initGmmFunc = reinterpret_cast<decltype(&InitializeGmm)>(gmmLib->getProcAddress(Os::gmmInitFuncName));
+-    destroyGmmFunc = reinterpret_cast<decltype(&GmmDestroy)>(gmmLib->getProcAddress(Os::gmmDestroyFuncName));
++    destroyGmmFunc = reinterpret_cast<decltype(&GmmAdapterDestroy)>(gmmLib->getProcAddress(Os::gmmDestroyFuncName));
+     UNRECOVERABLE_IF(!initGmmFunc || !destroyGmmFunc);
+ }
+ } // namespace NEO
+diff --git a/unit_tests/main.cpp b/unit_tests/main.cpp
+index b1a5ed7d..d52e46d2 100644
+--- a/unit_tests/main.cpp
++++ b/unit_tests/main.cpp
+@@ -456,8 +456,8 @@ int main(int argc, char **argv) {
+ #endif
+     if (!useMockGmm) {
+         Os::gmmDllName = GMM_UMD_DLL;
+-        Os::gmmInitFuncName = GMM_INIT_NAME;
+-        Os::gmmDestroyFuncName = GMM_DESTROY_NAME;
++        Os::gmmInitFuncName = GMM_ADAPTER_INIT_NAME;
++        Os::gmmDestroyFuncName = GMM_ADAPTER_DESTROY_NAME;
+     } else {
+         GmmHelper::createGmmContextWrapperFunc = GmmClientContextBase::create<MockGmmClientContext>;
+     }
+diff --git a/unit_tests/mocks/mock_gmm_client_context.cpp b/unit_tests/mocks/mock_gmm_client_context.cpp
+index 2b7d6a7c..7b9923c7 100644
+--- a/unit_tests/mocks/mock_gmm_client_context.cpp
++++ b/unit_tests/mocks/mock_gmm_client_context.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -8,6 +8,6 @@
+ #include "mock_gmm_client_context.h"
+ 
+ namespace NEO {
+-MockGmmClientContext::MockGmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc) : MockGmmClientContextBase(osInterface, hwInfo, initFunc, destroyFunc) {
++MockGmmClientContext::MockGmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc) : MockGmmClientContextBase(osInterface, hwInfo, initFunc, destroyFunc) {
+ }
+ } // namespace NEO
+diff --git a/unit_tests/mocks/mock_gmm_client_context.h b/unit_tests/mocks/mock_gmm_client_context.h
+index 3b587fe8..6c8a7394 100644
+--- a/unit_tests/mocks/mock_gmm_client_context.h
++++ b/unit_tests/mocks/mock_gmm_client_context.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * SPDX-License-Identifier: MIT
+  *
+@@ -11,6 +11,6 @@
+ namespace NEO {
+ class MockGmmClientContext : public MockGmmClientContextBase {
+   public:
+-    MockGmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmDestroy) destroyFunc);
++    MockGmmClientContext(OSInterface *osInterface, HardwareInfo *hwInfo, decltype(&InitializeGmm) initFunc, decltype(&GmmAdapterDestroy) destroyFunc);
+ };
+ } // namespace NEO
+-- 
+2.21.1
+
