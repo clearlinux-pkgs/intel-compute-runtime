@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 20.01.15264
-Release  : 39
+Release  : 40
 URL      : https://github.com/intel/compute-runtime/archive/20.01.15264.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/20.01.15264.tar.gz
 Summary  : No detailed summary available
