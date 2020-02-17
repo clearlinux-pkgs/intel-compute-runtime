@@ -1,2 +1,3 @@
+-DNEO_DRIVER_VERSION="%{version}"
 -DBUILD_TYPE=Release
 -DSKIP_UNIT_TESTS=1
