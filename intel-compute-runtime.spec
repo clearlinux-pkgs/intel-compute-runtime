@@ -4,7 +4,7 @@
 #
 Name     : intel-compute-runtime
 Version  : 20.01.15264
-Release  : 41
+Release  : 42
 URL      : https://github.com/intel/compute-runtime/archive/20.01.15264.tar.gz
 Source0  : https://github.com/intel/compute-runtime/archive/20.01.15264.tar.gz
 Summary  : No detailed summary available
@@ -80,7 +80,6 @@ license components for the intel-compute-runtime package.
 
 %prep
 %setup -q -n compute-runtime-20.01.15264
-cd %{_builddir}/compute-runtime-20.01.15264
 %patch1 -p1
 
 %build
@@ -88,7 +87,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1578695839
+export SOURCE_DATE_EPOCH=1581987950
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -96,22 +95,21 @@ export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
 export FFLAGS="$CFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
-%cmake .. -DBUILD_TYPE=Release \
+%cmake .. -DNEO_DRIVER_VERSION="%{version}" \
+-DBUILD_TYPE=Release \
 -DSKIP_UNIT_TESTS=1
-make  %{?_smp_mflags}  VERBOSE=1
+make  %{?_smp_mflags} VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1578695839
+export SOURCE_DATE_EPOCH=1581987950
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/intel-compute-runtime
-cp %{_builddir}/compute-runtime-20.01.15264/LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/47021b8c525fc84a5270553d63104832f4f99648
-cp %{_builddir}/compute-runtime-20.01.15264/third_party/opencl_headers/LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/7235f6784b4eae4c40a259dcecc7a20e6c487263
+cp LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/LICENSE
+cp third_party/opencl_headers/LICENSE %{buildroot}/usr/share/package-licenses/intel-compute-runtime/third_party_opencl_headers_LICENSE
 pushd clr-build
 %make_install
 popd
-## Remove excluded files
-rm -f %{buildroot}/usr/share/defaults/etc/ld.so.conf.d/libintelopencl.conf
 ## install_append content
 mkdir -p %{buildroot}/usr/share/OpenCL/vendors
 mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr/share/OpenCL/vendors
@@ -134,5 +132,5 @@ mv %{buildroot}/usr/share/defaults/etc/OpenCL/vendors/intel.icd %{buildroot}/usr
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/intel-compute-runtime/47021b8c525fc84a5270553d63104832f4f99648
-/usr/share/package-licenses/intel-compute-runtime/7235f6784b4eae4c40a259dcecc7a20e6c487263
+/usr/share/package-licenses/intel-compute-runtime/LICENSE
+/usr/share/package-licenses/intel-compute-runtime/third_party_opencl_headers_LICENSE
